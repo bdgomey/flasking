@@ -14,7 +14,7 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh 'docker build -t flask_app .'
+        sh 'docker build -t bjgomes/flask_app .'
       }
     }
 
