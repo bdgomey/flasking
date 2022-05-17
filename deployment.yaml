@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  flaskcontainer
-  namespace: default
+  namespace: bgomes
   labels:
     app:  flaskcontainer
 spec:
@@ -41,7 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: flaskcontainer
-  namespace: default
+  namespace: bgomes
 spec:
   selector:
     app: flaskcontainer
