@@ -35,7 +35,7 @@ pipeline {
     }
     stage ('Deploy to Kubernetes') {
     steps {
-        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS_Jenkins_credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
+        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
             sh "aws eks update-kubeconfig --region us-east-1 --name ${cluster_name}"
             sh "kubectl apply -f deployment.yaml"
             sh "kubectl rollout restart deployment flaskcontainer"
