@@ -1,4 +1,10 @@
 pipeline {
+
+  environment {
+    registry = 'bjgomes/flask_app'
+    registryCredentials = 'docker'
+    cluster_name = 'skillstorm'
+  }
   agent {
     node {
       label 'docker'
@@ -11,24 +17,21 @@ pipeline {
         git(url: 'https://github.com/bdgomey/flasking.git', branch: 'main')
       }
     }
-
-    stage('Build') {
+    stage('Build Stage') {
       steps {
-        sh 'docker build -t bjgomes/flask_app .'
+        script {
+          dockerImage = docker.build(registry)
+        }
       }
     }
-
-    stage('Docker Login') {
+    stage('Deploy Stage') {
       steps {
-        sh 'docker login -u bjgomes -p 147f97ff-be6a-47cc-8719-81145e357ce7'
+        script {
+          docker.withRegistry('', registryCredentials) {
+            dockerImage.push()
+          }
+        }
       }
     }
-
-    stage('Docker Push') {
-      steps {
-        sh 'docker push bjgomes/flask_app'
-      }
-    }
-
   }
 }
