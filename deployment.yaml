@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  flaskcontainer
+  namespace: default
+  labels:
+    app:  flaskcontainer
+spec:
+  selector:
+    matchLabels:
+      app: flaskcontainer
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  flaskcontainer
+    spec:
+      containers:
+      - name:  flaskcontainer
+        image:  bjgomes/flask_app
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort:  5000
+          name:  flaskcontainer
+        imagePullPolicy: Always
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flaskcontainer
+  namespace: default
+spec:
+  selector:
+    app: flaskcontainer
+  type: LoadBalancer
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: flaskcontainer
+    protocol: TCP
+    port: 80
+    targetPort: 5000
+
