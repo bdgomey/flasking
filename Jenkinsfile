@@ -58,11 +58,11 @@ pipeline {
         sh "docker image prune -af"
       }
     }
+  }
     post {
       steps{
         always {
             archiveArtifacts artifacts: 'kubectl_svc.txt', onlyIfSuccessful: true
-        }
       }
     }
   }
