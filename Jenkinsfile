@@ -53,9 +53,14 @@ pipeline {
     stage('Get Public ALB DNS and cleanup') {
       steps {
         withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-        sh "kubectl get svc -n ${namespace}"
+        sh "kubectl get svc -n ${namespace} > kubectl_svc.txt"
         }
         sh "docker image prune -af"
+      }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'kubectl_svc.txt', onlyIfSuccessful: true
       }
     }
   }
