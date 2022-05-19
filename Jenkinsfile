@@ -50,5 +50,11 @@ pipeline {
         }
       }
     }
+    stage('Get Public ALB DNS and cleanup') {
+      steps {
+        sh "kubectl get svc -n ${namespace}"
+        sh "docker image prune -af"
+      }
+    }
   }
 }
